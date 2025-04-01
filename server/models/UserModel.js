@@ -22,7 +22,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-  colors: {
+  color: {
     type: Number,
     required: false,
   },
@@ -32,10 +32,10 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-userSchema.pre("save", async function (next) {
+userSchema.pre("save", async function (next) { //pre is a type of middleware
   const salt = await genSalt();
   this.password = await hash(this.password, salt);
-  next();
+  next();// this function tells the server that this is completed and lets procced
 });
 
 const User = mongoose.model("Users", userSchema);
