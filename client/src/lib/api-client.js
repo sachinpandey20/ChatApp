@@ -1,4 +1,3 @@
-//const { default: axios } = require("axios");
 import { HOST } from "@/utils/constants";
 import axios from "axios";
 
