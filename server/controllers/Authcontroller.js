@@ -7,19 +7,19 @@ const createToken = (email, userId) => {
     expiresIn: maxAge,
   });
 };
-export const signup = async (request, Response, next) => {
+export const signup = async (request, response, next) => {
   try {
     const { email, password } = request.body;
     if (!email || !password) {
-      return Response.status(400).send("Email and password is required");
+      return response.status(400).send("Email and password is required");
     }
     const user = await User.create({ email, password });
-    Response.cookie("jwt", createToken(email, user.id), {
+    response.cookie("jwt", createToken(email, user.id), {
       maxAge,
       secure: true,
       sameSite: "None",
     });
-    return Response.status(201).json({
+    return response.status(201).json({
       user: {
         id: user.id,
         email: user.email,
@@ -28,31 +28,30 @@ export const signup = async (request, Response, next) => {
     });
   } catch (error) {
     console.log({ error });
-    return Response.status(500).send("internal Server Error");
+    return response.status(500).send("internal Server Error");
   }
 };
 
-export const login = async (request, Response, next) => {
+export const login = async (request, response, next) => {
   try {
     const { email, password } = request.body;
     if (!email || !password) {
-      return Response.status(400).send("Email and password is required");
+      return response.status(400).send("Email and password is required");
     }
     const user = await User.findOne({ email });
-    if(!user){
-      return Response.status(404).send("User with the given email not found");
+    if (!user) {
+      return response.status(404).send("User with the given email not found");
     }
     const auth = await compare(password, user.password);
-    if(!auth) {
-      return Response.status(400).send("Password is incorrect.");
-
+    if (!auth) {
+      return response.status(400).send("Password is incorrect.");
     }
-    Response.cookie("jwt", createToken(email, user.id), {
+    response.cookie("jwt", createToken(email, user.id), {
       maxAge,
       secure: true,
       sameSite: "None",
     });
-    return Response.status(201).json({
+    return response.status(201).json({
       user: {
         id: user.id,
         email: user.email,
@@ -62,6 +61,27 @@ export const login = async (request, Response, next) => {
         image: user.image,
         color: user.color,
       },
+    });
+  } catch (error) {
+    console.log({ error });
+    return response.status(500).send("internal Server Error");
+  }
+};
+
+export const getUserInfo = async (request, response, next) => {
+  try {
+    const userData = await User.findById(request.userId);
+    if (!userData) {
+      return response.status(404).send("User with the given id not found.");
+    }
+    return response.status(201).json({
+      id: userData.id,
+      email: userData.email,
+      profileSetup: userData.profileSetup,
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      image: userData.image,
+      color: userData.color,
     });
   } catch (error) {
     console.log({ error });

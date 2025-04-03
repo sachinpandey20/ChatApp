@@ -10,7 +10,7 @@ const Chat = () => {
 
   useEffect(() =>{
     if(!userInfo.profileSetup) {
-      toast("Please setup profile to continue");
+      toast("Please setup profile to continue.");
       navigate("/profile");
     }
   },[userInfo, navigate]);
