@@ -5,15 +5,47 @@ import React, { useState } from "react";
 import { IoArrowBack } from "react-icons/io5";
 import { FaPlus, FaTrash } from "react-icons/fa";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { apiClient } from "@/lib/api-client";
+import { UPDATE_PROFILE_ROUTE } from "@/utils/constants";
+import { Navigate, useNavigate } from "react-router-dom";
 const Profile = () => {
-  const { userInfo } = useAppStore();
+  const navigate = useNavigate();
+  const { userInfo, setUserInfo } = useAppStore();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [image, setImage] = useState(null);
   const [hovered, setHovered] = useState(false);
   const [selectedColor, setSelectedColor] = useState(0);
 
-  const saveChanges = async () => {};
+  const validateProfile = () => {
+    if (!firstName) {
+      toast.error("First Name is Required.");
+      return false;
+    }
+    if (!lastName) {
+      toast.error("Last Name is Required.");
+      return false;
+    }
+  };
+  const saveChanges = async () => {
+    if (validateProfile) {
+      try {
+        const response = await apiClient.post(
+          UPDATE_PROFILE_ROUTE,
+          { firstName, lastName, color: selectedColor },
+          { withCredentials: true }
+        );
+        if(response.status === 200 && response.data) 
+          setUserInfo({ ...response.data});
+          toast.success("Profile updated successfully");
+          navigate("/chat");
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
   return (
     <div className="bg-[#1b1c24] h-[100vh] flex items-center justify-center flex-col gap-10">
       <div className="flex flex-col gap-10 w-[80vw] md:w-max">
@@ -49,7 +81,7 @@ const Profile = () => {
             {hovered && (
               <div
                 className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full cursor-pointer"
-                onClick=""
+                // onClick=""
               >
                 {image ? (
                   <FaTrash className="text-white text-3xl cursor-pointer" />
@@ -88,11 +120,25 @@ const Profile = () => {
               />
             </div>
             <div className="w-full flex gap-5">
-              {
-                colors.map((color,index) => <div className={`${color} h-8 w-8 rounded-full corsor-pointed transition-all duration-300 ${selectedColor === index ? "outline outline-white" : ""}`}></div>)
-              }
+              {colors.map((color, index) => (
+                <div
+                  className={`${color} h-8 w-8 rounded-full cursor-pointer transition-all duration-300 
+                  ${selectedColor === index ? "outline outline-white/50" : ""}}
+                  `}
+                  key={index}
+                  onClick={() => setSelectedColor(index)}
+                ></div>
+              ))}
             </div>
           </div>
+        </div>
+        <div className="w-full">
+          <Button
+            className="h-16 w-full bg-purple-700 hover:bg-purple-900 transition-all duration-300"
+            onClick={saveChanges}
+          >
+            Save changes
+          </Button>
         </div>
       </div>
     </div>
