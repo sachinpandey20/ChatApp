@@ -26,6 +26,7 @@ app.use(
   })
 );
 
+app.use("/uploads/profiles", express.static("uploads/profiles"));//we are tellin the express server that whenever some user comes to this route and calls an image the we need to serve the asset from our directory to the request
 app.use(cookieparser());
 app.use(express.json());
 app.use("/api/auth", authRoutes);

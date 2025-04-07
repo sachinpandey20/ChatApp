@@ -1,6 +1,7 @@
 import { compare } from "bcrypt";
 import User from "../models/UserModel.js";
 import jwt from "jsonwebtoken";
+import { renameSync, unlinkSync } from "fs";
 const maxAge = 3 * 24 * 60 * 60 * 1000;
 const createToken = (email, userId) => {
   return jwt.sign({ email, userId }, process.env.JWT_KEY, {
@@ -28,7 +29,7 @@ export const signup = async (request, response, next) => {
     });
   } catch (error) {
     console.log({ error });
-    return response.status(500).send("internal Server Error");
+    return response.status(500).send("Internal Server Error");
   }
 };
 
@@ -64,7 +65,7 @@ export const login = async (request, response, next) => {
     });
   } catch (error) {
     console.log({ error });
-    return response.status(500).send("internal Server Error");
+    return response.status(500).send("Internal Server Error");
   }
 };
 
@@ -74,7 +75,7 @@ export const getUserInfo = async (request, response, next) => {
     if (!userData) {
       return response.status(404).send("User with the given id not found.");
     }
-    return response.status(201).json({
+    return response.status(200).json({
       id: userData.id,
       email: userData.email,
       profileSetup: userData.profileSetup,
@@ -85,7 +86,7 @@ export const getUserInfo = async (request, response, next) => {
     });
   } catch (error) {
     console.log({ error });
-    return Response.status(500).send("internal Server Error");
+    return Response.status(500).send("Internal Server Error");
   }
 };
 
@@ -109,7 +110,7 @@ export const updateProfile = async (request, response, next) => {
       },
       { new: true, runValidators: true }
     );
-    return response.status(201).json({
+    return response.status(200).json({
       id: userData.id,
       email: userData.email,
       profileSetup: userData.profileSetup,
@@ -120,6 +121,47 @@ export const updateProfile = async (request, response, next) => {
     });
   } catch (error) {
     console.log({ error });
-    return Response.status(500).send("internal Server Error");
+    return Response.status(500).send("Internal Server Error");
+  }
+};
+
+export const addProfileImage = async (request, response, next) => {
+  try {
+    if (!request.file) {
+      return response.status(400).send("File is required.");
+    }
+    const date = Date.now();
+    let fileName = "uploads/profiles/" + date + request.file.originalname;
+    renameSync(request.file.path, fileName);
+    const updateUser = await User.findByIdAndUpdate(
+      request.userId,
+      { image: fileName },
+      { new: true, runValidators: true }
+    );
+    return response.status(200).json({
+      image: updateUser.image,
+    });
+  } catch (error) {
+    console.log({ error });
+    return response.status(500).send("Internal Server Error");
+  }
+};
+export const removeProfileImage = async (request, response, next) => {
+  try {
+    const { userId } = request;
+    const user = await User.findById(userId);
+    if(!user) {
+      return response.status(404).send("User not found.");
+    }
+    if(user.image) {
+      unlinkSync(user.image);
+    }
+
+    user.image = null;
+    await user.save();
+    return response.status(200).send("Profile image removed successfully.");
+  } catch (error) {
+    console.log({ error });
+    return Response.status(500).send("Internal Server Error");
   }
 };
