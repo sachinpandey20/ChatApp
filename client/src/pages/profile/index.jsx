@@ -23,7 +23,7 @@ const Profile = () => {
   const [image, setImage] = useState(null);
   const [hovered, setHovered] = useState(false);
   const [selectedColor, setSelectedColor] = useState(0);
-  const fileInpuRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     if (userInfo.profileSetup) {
@@ -63,7 +63,7 @@ const Profile = () => {
       }
     }
   };
-  const handelNavigate = () => {
+  const handleNavigate = () => {
     if (userInfo.profileSetup) {
       navigate("/chat");
     } else {
@@ -72,7 +72,7 @@ const Profile = () => {
   };
 
   const handleFileInputClick = () => {
-    fileInpuRef.current.click();
+    fileInputRef.current.click();
   };
 
   const handleImageChange = async (event) => {
@@ -96,7 +96,7 @@ const Profile = () => {
       const response = await apiClient.delete(REMOVE_PROFILE_IMAGE_ROUTE, {
         withCredentials: true,
       });
-      if(response.status===200) {
+      if (response.status === 200) {
         setUserInfo({ ...userInfo, image: null });
         toast.success("Image removed successfully.");
         setImage(null);
@@ -108,7 +108,7 @@ const Profile = () => {
   return (
     <div className="bg-[#1b1c24] h-[100vh] flex items-center justify-center flex-col gap-10">
       <div className="flex flex-col gap-10 w-[80vw] md:w-max">
-        <div onClick={handelNavigate}>
+        <div onClick={handleNavigate}>
           <IoArrowBack className="text-4xl lg:text-6xl text-white/90 cursor-pointer" />
         </div>
         <div className="grid grid-cols-2">
@@ -130,14 +130,17 @@ const Profile = () => {
                     selectedColor
                   )}`}
                 >
-                  {firstName
+                  {/* {firstName
                     ? firstName.split("").shift()
-                    : userInfo.email.split("").shift()}
+                    : userInfo.email.split("").shift()} */}
+                  {userInfo.firstName
+                    ? userInfo.firstName.charAt(0)
+                    : userInfo.email.charAt(0)}
                 </div>
               )}
               <Input
                 type="file"
-                ref={fileInpuRef}
+                ref={fileInputRef}
                 className="hidden"
                 onChange={handleImageChange}
                 name="profile-image"
