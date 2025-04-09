@@ -28,7 +28,7 @@ const Profile = () => {
   useEffect(() => {
     if (userInfo.profileSetup) {
       setFirstName(userInfo.firstName);
-      setLastName(userInfo.firstName);
+      setLastName(userInfo.lastName);
       setSelectedColor(userInfo.color);
     }
     if (userInfo.image) {
@@ -175,7 +175,7 @@ const Profile = () => {
                 placeholder="First Name"
                 type="text"
                 onChange={(e) => setFirstName(e.target.value)}
-                value={userInfo.firstName}
+                value={firstName}
                 className="rounded-lg p-6 bg-[#2c2e3b] border-none"
               />
             </div>
@@ -184,7 +184,7 @@ const Profile = () => {
                 placeholder="Last Name"
                 type="text"
                 onChange={(e) => setLastName(e.target.value)}
-                value={userInfo.lastName}
+                value={lastName}
                 className="rounded-lg p-6 bg-[#2c2e3b] border-none"
               />
             </div>
