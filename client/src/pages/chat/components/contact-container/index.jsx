@@ -52,7 +52,7 @@ const Logo = () => {
             fill="#a16ee8"
           ></path>{" "}
         </svg>
-        <span className="text-3xl font-semibold ">Yapping</span>
+        <span className="text-3xl font-semibold ">CHAT APP</span>
       </div>
     );
   };
