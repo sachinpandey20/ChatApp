@@ -5,6 +5,7 @@ import cookieparser from "cookie-parser";
 import mongoose from "mongoose";
 import authRoutes from "./routes/AuthRoutes.js";
 import contactRoutes from "./routes/ContactRoutes.js";
+import setupSocket from "./socket.js";
 
 dotenv.config();
 
@@ -14,14 +15,14 @@ const databaseURL = process.env.DATABASE_URL;
 
 app.use(
   cors({
-    // origin: process.env.ORIGIN || "http://localhost:5173",
-    origin: function (origin, callback) {
-      if (!origin || origin === "http://localhost:5173") {
-          callback(null, true);
-      } else {
-          callback(new Error("Not allowed by CORS"));
-      }
-  },
+    origin: process.env.ORIGIN || "http://localhost:5173",
+    // origin: function (origin, callback) {
+    //   if (!origin || origin === "http://localhost:5173") {
+    //       callback(null, true);
+    //   } else {
+    //       callback(new Error("Not allowed by CORS"));
+    //   }
+  //},
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
   })
@@ -37,6 +38,7 @@ const server = app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
 
+setupSocket(server);
 mongoose
   .connect(databaseURL)
   .then(() => console.log("DB Connection Successful"))
