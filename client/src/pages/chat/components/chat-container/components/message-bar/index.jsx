@@ -8,7 +8,7 @@ import { IoSend } from "react-icons/io5";
 import { RiEmojiStickerLine } from "react-icons/ri";
 const MessageBar = () => {
   const emojiRef = useRef();
-  const { selectedChatType, selectedChatData } = useAppStore();
+  const { selectedChatType, selectedChatData, userInfo } = useAppStore();
   const socket = useSocket();
   const [message, setMessage] = useState("");
   const [emojiPickerOpen, setEmojiPickerOpen] = useState(false);
@@ -30,11 +30,11 @@ const MessageBar = () => {
 
   const handleSendMessage = () => {
     if(selectedChatType === "contact"){
-      socket.emit("snedMessage",{
-        sender:userInfo.if,
+      socket.emit("sendMessage",{
+        sender: userInfo.id,
         content: message,
         recipient: selectedChatData._id,
-        messageTpe: "text",
+        messageType: "text",
         fileUrl: undefined,
       })
     }

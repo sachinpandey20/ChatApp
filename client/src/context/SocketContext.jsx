@@ -22,19 +22,28 @@ export const SocketProvider = ({ children }) => {
         console.log("Connected to socket server");
       });
 
-      const handleReceivedMessage = (message) => {
-        const { selectedChatData, selectChatType, addMessage } = useAppStore.getState();
+      const handleReceiveMessage = (message) => {
+        const { selectedChatData, selectedChatType, addMessage } = useAppStore.getState();
+        // if (
+        //   selectedChatType !== undefined &&
+        //   selectedChatData._id ===
+        //     (message.sender._id ||
+        //       selectedChatData._id === message.recipient._id)
+        // ) {
+        //   console.log("message received", message);
+        //     addMessage(message);
+        // }
         if (
-          selectChatType !== undefined &&
-          selectedChatData._id ===
-            (message.sender._id ||
-              selectedChatData._id === message.recipient._id)
+          selectedChatType &&
+          (selectedChatData._id === message.sender._id ||
+            selectedChatData._id === message.recipient._id)
         ) {
-            addMessage(message);
+          console.log("message received", message);
+          addMessage(message);
         }
       };
 
-      socket.current.on("receiveMessage", handleReceivedMessage);
+      socket.current.on("receiveMessage", handleReceiveMessage);
 
       return () => {
         socket.current.disconnect();
