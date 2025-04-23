@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 import authRoutes from "./routes/AuthRoutes.js";
 import contactRoutes from "./routes/ContactRoutes.js";
 import setupSocket from "./socket.js";
+import messagesRoutes from "./routes/MessagesRoutes.js";
 
 dotenv.config();
 
@@ -29,10 +30,12 @@ app.use(
 );
 
 app.use("/uploads/profiles", express.static("uploads/profiles"));//we are tellin the express server that whenever some user comes to this route and calls an image the we need to serve the asset from our directory to the request
+app.use("/uploads/files", express.static("uploads/files"));
 app.use(cookieparser());
 app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/contacts", contactRoutes);
+app.use("/api/messages", messagesRoutes);
 
 const server = app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);

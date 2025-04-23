@@ -11,3 +11,9 @@ export const LOGOUT_ROUTE = `${AUTH_ROUTES}/logout`;
 
 export const CONTACT_ROUTES = 'api/contacts';
 export const SEARCH_CONTACTS_ROUTES = `${CONTACT_ROUTES}/search`;
+export const GET_DM_CONTACT_ROUTES = `${CONTACT_ROUTES}/get-contacts-for-dm`;
+
+export const MESSAGES__ROUTES = 'api/messages';
+export const GET_ALL_MESSAGES_ROUTES = `${MESSAGES__ROUTES}/get-messages`;
+export const UPLOAD_FILE_ROUTE = `${MESSAGES__ROUTES}/upload-file`;
+

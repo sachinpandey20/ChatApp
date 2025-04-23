@@ -1,5 +1,7 @@
 import { useSocket } from "@/context/SocketContext";
+import { apiClient } from "@/lib/api-client";
 import { useAppStore } from "@/store";
+import { UPLOAD_FILE_ROUTE } from "@/utils/constants";
 import EmojiPicker from "emoji-picker-react";
 import React, { useRef, useState } from "react";
 import { useEffect } from "react";
@@ -8,6 +10,7 @@ import { IoSend } from "react-icons/io5";
 import { RiEmojiStickerLine } from "react-icons/ri";
 const MessageBar = () => {
   const emojiRef = useRef();
+  const fileInputRef = useRef();
   const { selectedChatType, selectedChatData, userInfo } = useAppStore();
   const socket = useSocket();
   const [message, setMessage] = useState("");
@@ -29,14 +32,47 @@ const MessageBar = () => {
   }, [emojiRef]);
 
   const handleSendMessage = () => {
-    if(selectedChatType === "contact"){
-      socket.emit("sendMessage",{
+    if (selectedChatType === "contact") {
+      socket.emit("sendMessage", {
         sender: userInfo.id,
         content: message,
         recipient: selectedChatData._id,
         messageType: "text",
         fileUrl: undefined,
-      })
+      });
+    }
+  };
+
+  const handleAttachmentClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleAttachmentChange = async (event) => {
+    try {
+      const file = event.target.files[0];
+      if (file) {
+        const formData = new FormData();
+        formData.append("file", file);
+        const response = await apiClient.post(UPLOAD_FILE_ROUTE, formData, {
+          withCredentials: true,
+        });
+        if(response.status === 200 && response.data) {
+          if(selectedChatType === "contact") {
+            socket.emit("sendMessage", {
+              sender: userInfo.id,
+              content: undefined,
+              recipient: selectedChatData._id,
+              messageType: "file",
+              fileUrl: response.data.filePath,
+            });
+          }
+        }
+      }
+      console.log({file});
+    } catch (error) {
+      console.log({error});
     }
   };
   return (
@@ -49,9 +85,18 @@ const MessageBar = () => {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
-        <button className="text-neutral-500 focus:border-none focus:text-white duration-300 transition-all cursor-pointer">
+        <button
+          className="text-neutral-500 focus:border-none focus:text-white duration-300 transition-all cursor-pointer"
+          onClick={(e) => handleAttachmentClick()}
+        >
           <GrAttachment className="text-2xl" />
         </button>
+        <input
+          type="file"
+          className="hidden"
+          ref={fileInputRef}
+          onChange={handleAttachmentChange}
+        />
         <div className="relative">
           <button
             className="text-neutral-500 focus:border-none focus:text-white duration-300 transition-all cursor-pointer"

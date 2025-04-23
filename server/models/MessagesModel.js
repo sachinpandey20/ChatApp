@@ -4,12 +4,12 @@ const messagesSchema = new mongoose.Schema({
     sender: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Users",
-        requires: true,
+        required: true,
     },
     recipient: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Users",
-        requires: false,
+        required: false,
     },
     messageType:{
         type: String,
@@ -28,6 +28,24 @@ const messagesSchema = new mongoose.Schema({
             return this.messageType === "file";
         }
     },
+    // content: {
+    //     type: String,
+    //     validate: {
+    //         validator: function (value) {
+    //             return this.messageType !== "text" || (value && value.trim().length > 0);
+    //         },
+    //         message: "Content is required when messageType is 'text'.",
+    //     },
+    // },
+    // fileUrl: {
+    //     type: String,
+    //     validate: {
+    //         validator: function (value) {
+    //             return this.messageType !== "file" || (value && value.trim().length > 0);
+    //         },
+    //         message: "fileUrl is required when messageType is 'file'.",
+    //     },
+    // },
     timestamp: {
         type: Date,
         default: Date.now,
