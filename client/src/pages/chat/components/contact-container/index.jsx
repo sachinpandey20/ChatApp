@@ -40,6 +40,9 @@ const {directMessagesContacts, setDirectMessagesContacts} =  useAppStore();
             <Title text="Channels"/>
             <CreateChannel/>
         </div>
+        <div className="max-h-[38vh] overflow-y-auto scrollbar-hidden">
+          <ContactList contacts={channels}/>
+        </div>
       </div>
       <ProfileInfo/>
     </div>

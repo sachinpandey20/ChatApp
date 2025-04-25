@@ -164,7 +164,7 @@ const MultipleSelector = React.forwardRef(
       const Item = (
         <CommandItem
           value={inputValue}
-          className="cursor-pointer"
+          className="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none aria-[selected='true']:bg-accent aria-[selected='true']:text-accent-foreground data-[disabled='true']:pointer-events-none data-[disabled='true']:opacity-50"
           onMouseDown={(e) => {
             e.preventDefault();
             e.stopPropagation();
