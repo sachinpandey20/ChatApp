@@ -1,7 +1,6 @@
 import { useAppStore } from "@/store";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import React from "react";
-import { useActionData } from "react-router-dom";
 import { HOST } from "@/utils/constants";
 import { getColor } from "@/lib/utils";
 
@@ -72,6 +71,7 @@ const ContactList = ({ contacts, isChannel = false }) => {
             ) : (
               <span>{`${contact.firstName} ${contact.lastName}`}</span>
             )}
+          
           </div>
         </div>
       ))}

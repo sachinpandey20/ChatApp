@@ -49,7 +49,7 @@ const App = () => {
   }, [userInfo, setUserInfo]);
 
   if (loading) {
-    return <div>Loading.......</div>;
+    return <div>Loading.......</div>
   }
   return (
     <BrowserRouter>

@@ -15,8 +15,7 @@ const MessageContainer = () => {
     userInfo,
     selectedChatMessages,
     setSelectedChatMessages,
-    fileDownloadProgess,
-    setFileDownloadProgess,
+    setFileDownloadProgress,
     setIsDownloading,
   } = useAppStore();
 
@@ -76,13 +75,13 @@ const MessageContainer = () => {
 
   const downloadFile = async (url) => {
     setIsDownloading(true);
-    setFileDownloadProgess(0);
+    setFileDownloadProgress(0);
     const response = await apiClient.get(`${HOST}/${url}`, {
       responseType: "blob",
       onDownloadProgress: (progressEvent) => {
         const { loaded, total } = progressEvent;
         const percentCompleted = Math.round((loaded * 100) / total);
-        setFileDownloadProgess(percentCompleted);
+        setFileDownloadProgress(percentCompleted);
       },
     });
     const urlBlob = window.URL.createObjectURL(new Blob([response.data]));
@@ -94,7 +93,7 @@ const MessageContainer = () => {
     link.remove();
     window.URL.revokeObjectURL(urlBlob);
     setIsDownloading(false);
-    setFileDownloadProgess(0);
+    setFileDownloadProgress(0);
   };
 
   const renderDMMessages = (message) => (
