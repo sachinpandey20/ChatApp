@@ -14,9 +14,10 @@ const ContactsContainer = () => {
   const {
     directMessagesContacts,
     setDirectMessagesContacts,
+    channels,
+    setChannels,
   } = useAppStore();
-
-  const [ channels, setChannels] = useState([])
+  
   useEffect(() => {
     const getContacts = async () => {
       const response = await apiClient.get(GET_DM_CONTACT_ROUTES, {
