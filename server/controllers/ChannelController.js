@@ -23,7 +23,7 @@ export const createChannel = async (request, response, next) => {
       admin: userId,
     });
     await newChannel.save();
-    return response.status(201).json({ Channel: newChannel });
+    return response.status(201).json({ channel: newChannel });
   } catch (error) {
     console.log({ error });
     return response.status(500).send("Internal Server Error");

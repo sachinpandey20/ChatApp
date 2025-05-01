@@ -42,7 +42,7 @@ const CreateChannel = () => {
       setAllContacts(response.data.contacts);
     };
     getData();
-  }, []);
+  }, [allContacts, selectedContacts]);
 
   const createChannel = async () => {
     try {
